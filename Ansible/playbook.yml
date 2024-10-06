@@ -1,0 +1,52 @@
+---
+- name: Update APT cache and install necessary packages
+  hosts: all
+  become: yes  # Use sudo to run tasks that require elevated privileges
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install nano
+      apt:
+        name: nano
+        state: present  # Ensures nano is installed
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user srvadmin to Docker group
+      user:
+        name: srvadmin
+        group: docker
+        append: yes
+
+    - name: Install xterm
+      apt:
+        name: xterm
+        state: present
+
+    - name: Add alias and configuration to .bashrc
+      lineinfile:
+        path: /home/srvadmin/.bashrc
+        line: |
+          alias rsz='resize >/dev/null'
+          if [ $(tty) == '/dev/ttyS0' ]; then
+            trap rsz DEBUG
+            export TERM=xterm
+          fi
+        create: yes  # Creates the file if it does not exist
+
+    - name: Source .bashrc for srvadmin
+      command: source /home/srvadmin/.bashrc
+      become: no
+      args:
+        executable: /bin/bash
