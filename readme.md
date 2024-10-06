@@ -1,5 +1,3 @@
-Sure! Here’s a draft for your social media post in English:
-
 🌟 My Journey into Automation with Terraform and Ansible! 🌟
 
 For the past few days, I’ve been diving into Terraform and Ansible, and it has been an incredibly rewarding experience!
